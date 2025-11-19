@@ -1,10 +1,8 @@
 import { getSiteSettings } from "@/lib/site-settings";
-import { getHomePage } from "@/lib/home-page";
-import type { HomePage, HomePageBlock, HeroBlock, MenuItem, SiteSettings, TextMediaBlock } from "@/types/sanity";
+import type { MenuItem, SiteSettings } from "@/types/sanity";
 
 export default async function PreviewPage() {
   const settings = await getSiteSettings();
-  const homePage = await getHomePage();
 
   return (
     <div className="mx-auto w-full max-w-7xl px-6 py-12">
@@ -16,9 +14,6 @@ export default async function PreviewPage() {
 
         {/* Menu Card */}
         {settings?.menu && <MenuCard menu={settings.menu} />}
-
-        {/* Home Page Card */}
-        <HomePageCard homePage={homePage} />
       </div>
     </div>
   );
@@ -139,112 +134,6 @@ function MenuCard({ menu }: MenuCardProps) {
         </summary>
         <pre className="mt-2 max-h-96 overflow-auto rounded bg-zinc-100 p-4 text-xs dark:bg-zinc-800">
           {JSON.stringify(menu, null, 2)}
-        </pre>
-      </details>
-    </div>
-  );
-}
-
-type HomePageCardProps = {
-  homePage: HomePage | null;
-};
-
-function HomePageCard({ homePage }: HomePageCardProps) {
-  if (!homePage) {
-    return (
-      <div className="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm">
-        <h2 className="mb-4 text-xl font-semibold text-zinc-900">Home Page</h2>
-        <p className="text-sm text-zinc-500">No homePage document found.</p>
-      </div>
-    );
-  }
-
-  const blocks = (homePage.builder ?? []) as HomePageBlock[];
-  const heroBlocks = blocks.filter((b) => b._type === "heroBlock") as HeroBlock[];
-  const textBlocks = blocks.filter((b) => b._type === "textMediaBlock") as TextMediaBlock[];
-  const primaryHero = heroBlocks[0];
-  const primaryText = textBlocks[0];
-
-  return (
-    <div className="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm">
-      <h2 className="mb-4 text-xl font-semibold text-zinc-900">Home Page</h2>
-      <div className="space-y-3 text-sm">
-        <DataRow label="ID" value={homePage._id} />
-        <DataRow label="Name" value={homePage.name} />
-        <DataRow label="Blocks" value={`${blocks.length} block(s)`} />
-        <DataRow label="Hero blocks" value={`${heroBlocks.length}`} />
-        <DataRow label="Text/media blocks" value={`${textBlocks.length}`} />
-        <DataRow label="SEO title" value={homePage.seo?.title ?? "N/A"} />
-        <DataRow label="SEO description" value={homePage.seo?.description ?? "N/A"} />
-        <DataRow label="SEO noIndex" value={homePage.seo?.noIndex ? "true" : "false"} />
-      </div>
-
-      {primaryHero && (
-        <div className="mt-4 space-y-2 rounded border border-zinc-200 bg-zinc-50 p-3">
-          <h3 className="text-sm font-semibold text-zinc-800">Primary heroBlock</h3>
-          <p className="text-sm">
-            <span className="font-medium">Title:</span> {primaryHero.title}
-          </p>
-          {primaryHero.summary && (
-            <p className="text-sm">
-              <span className="font-medium">Summary:</span> {primaryHero.summary}
-            </p>
-          )}
-          {primaryHero.actions && primaryHero.actions.length > 0 && (
-            <div className="text-sm">
-              <span className="font-medium">Actions:</span>
-              <ul className="mt-1 list-disc pl-5 text-xs">
-                {primaryHero.actions.map((action, index) => (
-                  <li key={index}>
-                    {action.label} — {action.href ?? "(no href)"}{" "}
-                    {action.openInNewTab ? "(new tab)" : ""}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-      )}
-
-      {primaryText && (
-        <div className="mt-4 space-y-2 rounded border border-zinc-200 bg-zinc-50 p-3">
-          <h3 className="text-sm font-semibold text-zinc-800">Primary textMediaBlock</h3>
-          {primaryText.title && (
-            <p className="text-sm">
-              <span className="font-medium">Title:</span> {primaryText.title}
-            </p>
-          )}
-          <p className="text-xs text-zinc-600">
-            Body: {primaryText.body ? `${primaryText.body.length} block(s)` : "N/A"}
-          </p>
-        </div>
-      )}
-
-      {blocks.length > 0 && (
-        <div className="mt-4 space-y-2">
-          <h3 className="text-sm font-semibold text-zinc-700">Blocks:</h3>
-          <ul className="space-y-2 text-xs text-zinc-700">
-            {blocks.map((block) => {
-              const typedBlock = block as HomePageBlock;
-              const key = (typedBlock as any)._key ?? String(typedBlock._type);
-              let label = String(typedBlock._type);
-              if (typedBlock._type === "heroBlock" && (typedBlock as HeroBlock).title) {
-                label += ` — ${(typedBlock as HeroBlock).title}`;
-              } else if (typedBlock._type === "textMediaBlock" && (typedBlock as TextMediaBlock).title) {
-                label += ` — ${(typedBlock as TextMediaBlock).title}`;
-              }
-              return <li key={key}>{label}</li>;
-            })}
-          </ul>
-        </div>
-      )}
-
-      <details className="mt-4">
-        <summary className="cursor-pointer text-sm font-medium text-zinc-600 hover:text-zinc-900">
-          View Raw JSON
-        </summary>
-        <pre className="mt-2 max-h-96 overflow-auto rounded bg-zinc-100 p-4 text-[11px]">
-          {JSON.stringify(homePage, null, 2)}
         </pre>
       </details>
     </div>
