@@ -32,11 +32,12 @@ export default async function RootLayout({
   return (
     <html lang={lang}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-zinc-100 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-zinc-900`}
+        suppressHydrationWarning
       >
         <div className="flex min-h-screen flex-col">
           <SiteHeader settings={settings} />
-          <main className="flex-1 bg-white dark:bg-zinc-950">{children}</main>
+          <main className="flex-1 bg-white">{children}</main>
           <SiteFooter settings={settings} />
         </div>
       </body>

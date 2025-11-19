@@ -33,8 +33,10 @@ export const siteSettingsQuery = groq`
       }
     },
     "menu": menu->{
+      _id,
       title,
       items[]{
+        _key,
         title,
         itemType,
         link{
@@ -54,6 +56,7 @@ export const siteSettingsQuery = groq`
           }
         },
         childItems[]{
+          _key,
           title,
           itemType,
           link{
@@ -116,6 +119,84 @@ export const siteSettingsQuery = groq`
           )
         }
       },
+    }
+  }
+`;
+
+export const homePageQuery = groq`
+  *[_type == "homePage"][0]{
+    _id,
+    _type,
+    name,
+    builder[]{
+      _type,
+      _key,
+      ...select(
+        // Hero Block
+        _type == "heroBlock" => {
+          title,
+          summary,
+          media{
+            asset->{
+              _id,
+              url,
+              metadata{
+                dimensions{
+                  width,
+                  height,
+                  aspectRatio
+                }
+              }
+            },
+            alt,
+            caption
+          },
+          actions[]{
+            label,
+            href,
+            openInNewTab
+          },
+          layout,
+          mediaLayout
+        },
+        // Text Block
+        _type == "textBlock" => {
+          title,
+          body[],
+          media{
+            asset->{
+              _id,
+              url,
+              metadata{
+                dimensions{
+                  width,
+                  height
+                }
+              }
+            },
+            alt,
+            caption
+          },
+          actions[]{
+            label,
+            href,
+            openInNewTab
+          },
+          layout,
+        }
+      )
+    },
+    seo{
+      title,
+      description,
+      image{
+        asset->{
+          _id,
+          url
+        },
+        alt
+      },
+      noIndex
     }
   }
 `;

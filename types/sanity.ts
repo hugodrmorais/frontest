@@ -67,12 +67,91 @@ export type SeoSettings = {
   image?: Maybe<SanityImage>;
 };
 
+// Home Page / Builder
+
+export type BlockLayoutWidth = "container" | "full";
+export type BlockLayoutBackground = "default" | "muted" | "brand" | "image";
+export type BlockLayoutTheme = "light" | "dark";
+export type BlockLayoutAlign = "left" | "center";
+export type BlockLayoutPadding = "none" | "sm" | "md" | "lg";
+
+export type BlockLayout = {
+  width?: BlockLayoutWidth;
+  background?: BlockLayoutBackground;
+  backgroundImage?: Maybe<SanityImage>;
+  theme?: BlockLayoutTheme;
+  align?: BlockLayoutAlign;
+  paddingTop?: BlockLayoutPadding;
+  paddingBottom?: BlockLayoutPadding;
+};
+
+export type MediaLayout = {
+  mediaPosition?: "left" | "right" | "top";
+  mediaWidth?: number;
+  mediaFit?: "cover" | "contain";
+};
+
+export type GridLayout = {
+  columns?: number;
+  gap?: "sm" | "md" | "lg";
+};
+
+export type HeroBlock = {
+  _type: "heroBlock";
+  _key: string;
+  title: string;
+  summary?: string;
+  media?: Maybe<SanityImage>;
+  actions?: Maybe<
+    Array<{
+      label: string;
+      href?: string;
+      openInNewTab?: boolean;
+    }>
+  >;
+  layout?: BlockLayout;
+  mediaLayout?: MediaLayout;
+};
+
+export type TextBlock = {
+  _type: "textBlock";
+  _key: string;
+  title?: string | null;
+  body?: unknown[]; // PortableTextBlock[]
+  layout?: BlockLayout | null;
+};
+
+export type HomePageBlock = HeroBlock | TextBlock | Record<string, unknown>;
+
+export type HomePage = {
+  _id: string;
+  _type: "homePage";
+  name: string;
+  builder?: Maybe<HomePageBlock[]>;
+  seo?: Maybe<SeoSettings>;
+};
+
+export type MenuItem = {
+  _key?: string;
+  title: string;
+  itemType: "link" | "parent";
+  link?: Maybe<SanityLink>;
+  childItems?: Maybe<MenuItem[]>;
+};
+
+export type Menu = {
+  _id?: string;
+  title?: string;
+  items?: Maybe<MenuItem[]>;
+};
+
 export type SiteSettings = {
   siteTitle?: string;
   defaultLanguage?: string;
   logo?: Maybe<SanityImage>;
   social?: Maybe<SocialLink[]>;
   contact?: Maybe<ContactInfo>;
+  menu?: Maybe<Menu>;
   footer?: Maybe<Footer>;
   seo?: Maybe<SeoSettings>;
 };
