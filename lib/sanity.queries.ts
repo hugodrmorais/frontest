@@ -163,24 +163,16 @@ export const homePageQuery = groq`
         _type == "textBlock" => {
           title,
           body[],
-          media{
-            asset->{
-              _id,
-              url,
-              metadata{
-                dimensions{
-                  width,
-                  height
-                }
-              }
-            },
-            alt,
-            caption
-          },
-          actions[]{
-            label,
-            href,
-            openInNewTab
+          layout,
+        },
+        // Accordion Block
+        _type == "accordionBlock" => {
+          title,
+          items[]{
+            _type,
+            _key,
+            title,
+            content[]
           },
           layout,
         }
@@ -199,4 +191,4 @@ export const homePageQuery = groq`
       noIndex
     }
   }
-`;
+  `;

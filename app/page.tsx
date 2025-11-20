@@ -1,14 +1,14 @@
 import { getSiteSettings } from "@/lib/site-settings";
+import { getHomePage } from "@/lib/home-page";
+import { HomeBuilder } from "@/components/home-builder";
 
 export default async function Home() {
   const settings = await getSiteSettings();
+  const homePage = await getHomePage();
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-6 py-12">
-      <h1 className="text-3xl font-semibold text-zinc-900">
-        {settings?.siteTitle ?? "Home"}
-      </h1>
-
+    <div className="bg-white">
+      <HomeBuilder blocks={homePage?.builder ?? []} />
     </div>
   );
 }

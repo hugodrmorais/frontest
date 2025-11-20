@@ -96,6 +96,8 @@ export type GridLayout = {
   gap?: "sm" | "md" | "lg";
 };
 
+// Content blocks
+
 export type HeroBlock = {
   _type: "heroBlock";
   _key: string;
@@ -117,11 +119,33 @@ export type TextBlock = {
   _type: "textBlock";
   _key: string;
   title?: string | null;
-  body?: unknown[]; // PortableTextBlock[]
+  // PortableTextBlock[] | similar
+  body?: unknown[];
+  // Optional layout configuration coming from Sanity
   layout?: BlockLayout | null;
 };
 
-export type HomePageBlock = HeroBlock | TextBlock | Record<string, unknown>;
+export type AccordionItem = {
+  _type: "accordionItem";
+  _key: string;
+  title: string;
+  // PortableTextBlock[]
+  content?: unknown[];
+};
+
+export type AccordionBlock = {
+  _type: "accordionBlock";
+  _key: string;
+  title?: string | null;
+  items: AccordionItem[];
+  layout?: BlockLayout | null;
+};
+
+export type HomePageBlock =
+  | HeroBlock
+  | TextBlock
+  | AccordionBlock
+  | Record<string, unknown>;
 
 export type HomePage = {
   _id: string;
