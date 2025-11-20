@@ -388,12 +388,6 @@ function TopBar({ settings }: TopBarProps) {
   return (
     <div className="bg-white">
       <div className="mx-auto flex w-full max-w-7xl items-center justify-end gap-4 px-5 py-2 text-sm md:px-6">
-        <div className="flex items-center gap-2 text-zinc-900">
-          <span className={currentLang === "en" ? "underline" : ""}>English</span>
-          <span className="text-zinc-400">|</span>
-          <span className={currentLang !== "en" ? "underline" : ""}>Norsk</span>
-          <span className="ml-4 text-zinc-600">🔍 Search</span>
-        </div>
       </div>
     </div>
   );
