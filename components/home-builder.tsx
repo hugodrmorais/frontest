@@ -12,16 +12,21 @@ export function HomeBuilder({ blocks }: HomeBuilderProps) {
 
   return (
     <div className="mx-auto w-full max-w-6xl px-6 py-10 space-y-12">
-      {blocks.map((block) => {
+      {blocks.map((block, index) => {
         if (!block || typeof block !== "object") return null;
+
+        const key =
+          (block as { _key?: string })._key ??
+          // Fallback to index to keep React happy if _key is missing
+          String(index);
 
         switch (block._type) {
           case "heroBlock":
-            return <HeroBlockSection key={block._key} block={block as HeroBlock} />;
+            return <HeroBlockSection key={key} block={block as HeroBlock} />;
           case "textBlock":
-            return <TextBlockSection key={block._key} block={block as TextBlock} />;
+            return <TextBlockSection key={key} block={block as TextBlock} />;
           case "accordionBlock":
-            return <AccordionBlockSection key={block._key} block={block as AccordionBlock} />;
+            return <AccordionBlockSection key={key} block={block as AccordionBlock} />;
           default:
             return null;
         }
