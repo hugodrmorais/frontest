@@ -1,8 +1,15 @@
-import type { HomePageBlock, TextBlock, HeroBlock, AccordionBlock, BlockLayout } from "@/types/sanity";
+import type {
+  HomePageBlock,
+  PageBlock,
+  TextBlock,
+  HeroBlock,
+  AccordionBlock,
+  BlockLayout,
+} from "@/types/sanity";
 import { PortableText } from "@portabletext/react";
 
 type HomeBuilderProps = {
-  blocks: HomePageBlock[] | null | undefined;
+  blocks: (HomePageBlock | PageBlock)[] | null | undefined;
 };
 
 export function HomeBuilder({ blocks }: HomeBuilderProps) {

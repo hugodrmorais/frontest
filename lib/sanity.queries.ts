@@ -42,29 +42,23 @@ export const siteSettingsQuery = groq`
         link{
           label,
           linkType,
-          internalPath,
           href,
           openInNewTab,
-          reference->{
-            _type,
-            title,
-            "slug": select(
-              defined(slug.current) => slug.current,
-              defined(slug) => slug,
-              defined(current) => current
-            )
-          }
-        },
-        childItems[]{
-          _key,
-          title,
-          itemType,
-          link{
-            label,
-            linkType,
-            internalPath,
-            href,
-            openInNewTab,
+          "internalPath": select(
+            defined(internalPage->slug.current) => "/" + coalesce(internalPage->language, "en") + "/" + internalPage->slug.current,
+            defined(internalPage->slug) => "/" + coalesce(internalPage->language, "en") + "/" + internalPage->slug,
+            defined(internalPath) => internalPath
+          ),
+          "reference": coalesce(
+            internalPage->{
+              _type,
+              title,
+              "slug": select(
+                defined(slug.current) => slug.current,
+                defined(slug) => slug,
+                defined(current) => current
+              )
+            },
             reference->{
               _type,
               title,
@@ -74,6 +68,42 @@ export const siteSettingsQuery = groq`
                 defined(current) => current
               )
             }
+          )
+        },
+        childItems[]{
+          _key,
+          title,
+          itemType,
+          link{
+            label,
+            linkType,
+            href,
+            openInNewTab,
+            "internalPath": select(
+            defined(internalPage->slug.current) => "/" + coalesce(internalPage->language, "en") + "/" + internalPage->slug.current,
+            defined(internalPage->slug) => "/" + coalesce(internalPage->language, "en") + "/" + internalPage->slug,
+              defined(internalPath) => internalPath
+            ),
+            "reference": coalesce(
+              internalPage->{
+                _type,
+                title,
+                "slug": select(
+                  defined(slug.current) => slug.current,
+                  defined(slug) => slug,
+                  defined(current) => current
+                )
+              },
+              reference->{
+                _type,
+                title,
+                "slug": select(
+                  defined(slug.current) => slug.current,
+                  defined(slug) => slug,
+                  defined(current) => current
+                )
+              }
+            )
           }
         }
       }
@@ -88,36 +118,66 @@ export const siteSettingsQuery = groq`
           link{
             label,
             linkType,
-            internalPath,
             href,
             openInNewTab,
-            reference->{
-              _type,
-              title,
-              "slug": select(
-                defined(slug.current) => slug.current,
-                defined(slug) => slug,
-                defined(current) => current
-              )
-            }
+            "internalPath": select(
+              defined(internalPage->slug.current) => "/" + coalesce(internalPage->language, "en") + "/" + internalPage->slug.current,
+              defined(internalPage->slug) => "/" + coalesce(internalPage->language, "en") + "/" + internalPage->slug,
+              defined(internalPath) => internalPath
+            ),
+            "reference": coalesce(
+              internalPage->{
+                _type,
+                title,
+                "slug": select(
+                  defined(slug.current) => slug.current,
+                  defined(slug) => slug,
+                  defined(current) => current
+                )
+              },
+              reference->{
+                _type,
+                title,
+                "slug": select(
+                  defined(slug.current) => slug.current,
+                  defined(slug) => slug,
+                  defined(current) => current
+                )
+              }
+            )
           }
         }
       },
       legal[]{
         label,
         linkType,
-        internalPath,
         href,
         openInNewTab,
-        reference->{
-          _type,
-          title,
-          "slug": select(
-            defined(slug.current) => slug.current,
-            defined(slug) => slug,
-            defined(current) => current
-          )
-        }
+        "internalPath": select(
+          defined(internalPage->slug.current) => "/" + coalesce(internalPage->language, "en") + "/" + internalPage->slug.current,
+          defined(internalPage->slug) => "/" + coalesce(internalPage->language, "en") + "/" + internalPage->slug,
+          defined(internalPath) => internalPath
+        ),
+        "reference": coalesce(
+          internalPage->{
+            _type,
+            title,
+            "slug": select(
+              defined(slug.current) => slug.current,
+              defined(slug) => slug,
+              defined(current) => current
+            )
+          },
+          reference->{
+            _type,
+            title,
+            "slug": select(
+              defined(slug.current) => slug.current,
+              defined(slug) => slug,
+              defined(current) => current
+            )
+          }
+        )
       },
     }
   }
@@ -192,3 +252,48 @@ export const homePageQuery = groq`
     }
   }
   `;
+
+export const pageBySlugQuery = groq`
+  *[_type == "page" && slug.current == $slug && language == $language][0]{
+    _id,
+    _type,
+    title,
+    "slug": slug.current,
+    intro,
+    language,
+    translationOf,
+    builder[]{
+      _type,
+      _key,
+      ...select(
+        _type == "textBlock" => {
+          title,
+          body[],
+          layout,
+        },
+        _type == "accordionBlock" => {
+          title,
+          items[]{
+            _type,
+            _key,
+            title,
+            content[]
+          },
+          layout,
+        }
+      )
+    },
+    seo{
+      title,
+      description,
+      image{
+        asset->{
+          _id,
+          url
+        },
+        alt
+      },
+      noIndex
+    }
+  }
+`;

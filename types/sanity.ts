@@ -141,6 +141,9 @@ export type AccordionBlock = {
   layout?: BlockLayout | null;
 };
 
+// Blocks used on generic pages (no hero)
+export type PageBlock = TextBlock | AccordionBlock;
+
 export type HomePageBlock =
   | HeroBlock
   | TextBlock
@@ -152,6 +155,22 @@ export type HomePage = {
   _type: "homePage";
   name: string;
   builder?: Maybe<HomePageBlock[]>;
+  seo?: Maybe<SeoSettings>;
+};
+
+export type PageLanguage = "nn" | "nb" | "en";
+
+export type Page = {
+  _id: string;
+  _type: "page";
+  title: string;
+  slug: { current: string };
+  intro?: string;
+  builder?: Maybe<PageBlock[]>;
+  language: PageLanguage;
+  translationOf?: {
+    _ref: string;
+  };
   seo?: Maybe<SeoSettings>;
 };
 
